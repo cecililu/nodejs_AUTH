@@ -5,7 +5,7 @@ require('dotenv').config()
 const {authRouter}=require('./routes/auth')
 const dbconnect=require("./db")
 const mongoose=require('mongoose')
-
+app.use(express.json());
 
 
 
