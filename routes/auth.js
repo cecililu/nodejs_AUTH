@@ -1,11 +1,17 @@
-
 const router= require("express").Router()
-const { request } = require("express")
+
 const User=require("../models/User")
+
 router.post('/register',async(req,res)=>{
-      console.log(req.body)
-        user=User({name:req.body.name, email:request.body.email,password:request.body.password})
-        await user.save()
+      
+        const user = new User({ 
+        name :req.body.name,
+        email: req.body.email,
+        password:req.body.password
+      })
+        const a= await user.save()
+        res.send(a)
+        
 
 
 })
