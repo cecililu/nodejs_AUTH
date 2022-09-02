@@ -18,7 +18,7 @@ router.post('/register',async(req,res)=>{
            res.status(400).send("user already exist at that email")
         }
 
-        //hash
+        //hashing the password
         const salt=await bcrypt.genSalt(10)
         const hashpass=await bcrypt.hash(req.body.password,salt)
     
@@ -29,7 +29,7 @@ router.post('/register',async(req,res)=>{
       })
       try{
       const usersaved = await user.save();
-      res.send(usersaved);
+      res.send(`usersaved ${usersaved.name} sucessfilly`);
       }
       catch(e){
         console.log('user could not be saved',e)
@@ -39,6 +39,17 @@ router.post('/register',async(req,res)=>{
         
         
 
+
+})
+
+router.post('/login', async(req,res)=>{
+       //joi validation yet to write
+       const useralready=await User.findOne({email:req.body.email})
+       
+       if (!useralready){
+           res.status(400).send("user does not exist")
+       }else{
+        res.send('user exist')}
 
 })
 
