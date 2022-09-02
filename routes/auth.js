@@ -1,34 +1,31 @@
 const router= require("express").Router()
-
+const bcrypt=require('bcryptjs')
 const User=require("../models/User")
+const { registervalidation } = require("../validation")
 
-//validation 
-// const joi=require('@hapi/joi')
-const Joi = require("@hapi/joi")
 
-const schema={
-  name :Joi.string()
-      .min(6).required(),
-  email: Joi.string().
-      min(6).required()
-      .email(),
-  password:Joi.string()
-      .min(6).
-      required().
-      email(),
-}
+
+
 
 router.post('/register',async(req,res)=>{
-      // const alreadyExist=User.findOne(req.body.email)
-      // console.log(alreadyExist)
-       
-      //validating the data
-        // const validatation=Joi.validate(req.body,schema)
-        // res.send(validatation)
+      
+        // const {error}=registervalidation(req.body)
+        // if (error) return res.send(error.details[0].message)
+
+
+        const useralready=await User.findOne({email:req.body.email})
+        if (useralready){
+           res.status(400).send("user already exist at that email")
+        }
+
+        //hash
+        const salt=await bcrypt.genSalt(10)
+        const hashpass=await bcrypt.hash(req.body.password,salt)
+    
         const user = new User({ 
         name :req.body.name,
         email: req.body.email,
-        password:req.body.password,  
+        password:hashpass,  
       })
       try{
       const usersaved = await user.save();
